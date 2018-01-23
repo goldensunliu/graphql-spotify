@@ -1,6 +1,6 @@
 {
   "name": "graphql-spotify",
-  "version": "0.4.0",
+  "version": "0.4.141",
   "description": "GraphQL Schema And Resolvers For Spotify Web API",
   "main": "dist/lib.js",
   "module": "src/index.js",
@@ -20,10 +20,7 @@
     "path": "^0.12.7",
     "webpack": "^3.10.0",
     "webpack-node-externals": "^1.6.0",
-    "graphql": "git://github.com/graphql/graphql-js.git#npm",
-    "dataloader": "^1.3.0",
-    "graphql-tools": "^2.18.0",
-    "isomorphic-fetch": "^2.2.1"
+    "graphql": "git://github.com/graphql/graphql-js.git#npm"
   },
   "peerDependencies": {
     "graphql": "git://github.com/graphql/graphql-js.git#npm"

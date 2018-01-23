@@ -122,6 +122,19 @@ export async function getAudioFeatures(token, ids)
     return res;
 }
 
+export function makeLoaders(token) {
+    return {
+        UserLoader : makeUserLoader(token),
+        PlaylistLoader : makePlaylistLoader(token),
+        PlaylistTracksLoader: makePlaylistTracksLoader(token),
+        AlbumsLoader: makeAlbumsLoader(token),
+        ArtistsLoader: makeArtistsLoader(token),
+        TracksLoader: makeTracksLoader(token),
+        SavedContainsLoader: makeSavedContainsLoader(token),
+        AudioFeaturesLoader: makeAudioFeaturesLoader(token)
+    }
+}
+
 export function makeUserLoader(token) {
     const batchLoadFn = async ([key]) => {
         const userId = key

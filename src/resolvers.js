@@ -1,17 +1,12 @@
 import {
-    getFeaturedPlaylists, getRecentlyPlayed, makePlaylistLoader, makePlaylistTracksLoader, makeAlbumsLoader,
-    makeUserLoader, makeArtistsLoader, makeAudioFeaturesLoader, saveTrackToLib, makeTracksLoader, makeSavedContainsLoader
+    getFeaturedPlaylists, getRecentlyPlayed, makeLoaders, saveTrackToLib
 } from './SpotifyWebApi'
 
 export function makeResolvers(token) {
-    const PlaylistLoader = makePlaylistLoader(token)
-    const PlaylistTracksLoader = makePlaylistTracksLoader(token)
-    const AlbumLoader = makeAlbumsLoader(token)
-    const UserLoader = makeUserLoader(token)
-    const ArtistLoader = makeArtistsLoader(token)
-    const AudioFeatureLoader = makeAudioFeaturesLoader(token)
-    const SavedContainsLoader = makeSavedContainsLoader(token)
-    const TrackLoader = makeTracksLoader(token)
+    const {
+        PlaylistLoader, PlaylistTracksLoader, AlbumsLoader, UserLoader, ArtistsLoader,
+        AudioFeaturesLoader, SavedContainsLoader, TracksLoader
+    } = makeLoaders(token);
 
     const resolvers = {
         RootQuery: {
@@ -27,13 +22,13 @@ export function makeResolvers(token) {
                 return await PlaylistLoader.load({ playlistId, userId })
             },
             artist: async(obj, {artistId}) => {
-                return await ArtistLoader.load(artistId)
+                return await ArtistsLoader.load(artistId)
             },
             track: async(obj, {id}) => {
-                return await TrackLoader.load(id)
+                return await TracksLoader.load(id)
             },
             audioFeatures: async (obj, {id}) => {
-                return await AudioFeatureLoader.load(id)
+                return await AudioFeaturesLoader.load(id)
             }
         },
         Mutation: {
@@ -88,42 +83,42 @@ export function makeResolvers(token) {
         },
         Artist: {
             followerCount: async ({ id }) => {
-                const artistFull = await ArtistLoader.load(id)
+                const artistFull = await ArtistsLoader.load(id)
                 return artistFull.followers.total
             },
             images: async ({ id }) => {
-                const artistFull = await ArtistLoader.load(id)
+                const artistFull = await ArtistsLoader.load(id)
                 return artistFull.images
             },
             popularity: async ({ id }) => {
-                const artistFull = await ArtistLoader.load(id)
+                const artistFull = await ArtistsLoader.load(id)
                 return artistFull.popularity
             },
             genres: async ({ id }) => {
-                const artistFull = await ArtistLoader.load(id)
+                const artistFull = await ArtistsLoader.load(id)
                 return artistFull.genres
             },
 
         },
         Album: {
             genres: async (object) => {
-                const AlbumFull = await AlbumLoader.load(object.id)
+                const AlbumFull = await AlbumsLoader.load(object.id)
                 return AlbumFull.genres
             },
             label: async (object) => {
-                const AlbumFull = await AlbumLoader.load(object.id)
+                const AlbumFull = await AlbumsLoader.load(object.id)
                 return AlbumFull.label
             },
             popularity: async (object) => {
-                const AlbumFull = await AlbumLoader.load(object.id)
+                const AlbumFull = await AlbumsLoader.load(object.id)
                 return AlbumFull.popularity
             },
             release_date: async (object) => {
-                const { release_date } = await AlbumLoader.load(object.id)
+                const { release_date } = await AlbumsLoader.load(object.id)
                 return release_date
             },
             release_date_precision: async (object) => {
-                const { release_date_precision } = await AlbumLoader.load(object.id)
+                const { release_date_precision } = await AlbumsLoader.load(object.id)
                 return release_date_precision
             }
         },
