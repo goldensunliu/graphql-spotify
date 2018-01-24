@@ -10,6 +10,10 @@ import AudioFeatures from './AudioFeatures'
 import PlayHistory from './PlayHistory'
 import ExternalUrls from './ExternalUrls'
 import Category from './Category'
+import RecommendationParameters from './RecommendationParameters'
+import RecommendationsResponse from './RecommendationsResponse'
+import RecommendationsSeedObject from './RecommendationsSeedObject'
+
 import RootQuery from './RootQuery'
 
 const SchemaDefinition = `
@@ -20,6 +24,6 @@ const SchemaDefinition = `
 `;
 
 const typeDefs = [SchemaDefinition, RootQuery, Playlist, Image, User, PlaylistTrack, Track, Album, Artist, Paging,
-    AudioFeatures, PlayHistory, Category, ExternalUrls];
+    AudioFeatures, PlayHistory, Category, RecommendationParameters, RecommendationsResponse, RecommendationsSeedObject, ExternalUrls];
 
 export default typeDefs

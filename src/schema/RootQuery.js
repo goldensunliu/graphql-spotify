@@ -26,6 +26,9 @@ const RootQuery = `
     Get a list of categories used to tag items in Spotify (on, for example, the Spotify player’s “Browse” tab).
     """
     categories(limit: Int, offset: Int): Paging
+    """
+    """
+    recommendations(parameters: RecommendationParameters): RecommendationsResponse
     
   }
   type Mutation {

@@ -9,6 +9,10 @@ function makeHeaders(token) {
     }
 }
 
+function cacheKeyFnForQueryKeys(key) {
+    return JSON.stringify(key)
+}
+
 function serializeToURLParameters(obj) {
     return Object.entries(obj).map(([key, val]) => `${key}=${val}`).join('&')
 }
@@ -35,6 +39,16 @@ export async function getSavedContains(token, trackIds) {
 export async function getFeaturedPlaylists(token, queryParams = {})
 {
     let res = await fetch(`https://api.spotify.com/v1/browse/featured-playlists?${serializeToURLParameters(queryParams)}`, {
+        method: 'GET',
+        headers: makeHeaders(token)
+    });
+    res = await res.json();
+    return res;
+}
+
+export async function getRecommendations(token, queryParams)
+{
+    let res = await fetch(`https://api.spotify.com/v1/recommendations?${serializeToURLParameters(queryParams)}`, {
         method: 'GET',
         headers: makeHeaders(token)
     });
@@ -143,6 +157,7 @@ export function makeLoaders(token) {
         SavedContainsLoader: makeSavedContainsLoader(token),
         AudioFeaturesLoader: makeAudioFeaturesLoader(token),
         CategoriesLoader : makeCategoriesLoader(token),
+        RecommendationsLoader: makeRecommendationsLoader(token)
     }
 }
 
@@ -215,5 +230,12 @@ export function makeCategoriesLoader(token) {
     const batchLoadFn = async ([key]) => {
         return [await getCategories(token, key)]
     }
-    return new Dataloader(batchLoadFn, { batch: false })
+    return new Dataloader(batchLoadFn, { batch: false, cacheKeyFn: cacheKeyFnForQueryKeys })
+}
+
+export function makeRecommendationsLoader(token) {
+    const batchLoadFn = async ([key]) => {
+        return [await getRecommendations(token, key)]
+    }
+    return new Dataloader(batchLoadFn, { batch: false, cacheKeyFn: cacheKeyFnForQueryKeys })
 }

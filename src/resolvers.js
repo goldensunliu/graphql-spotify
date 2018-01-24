@@ -1,12 +1,11 @@
 import {
-    getCategories,
     getFeaturedPlaylists, getRecentlyPlayed, makeLoaders, saveTrackToLib
 } from './SpotifyWebApi'
 
 export function makeResolvers(token) {
     const {
         PlaylistLoader, PlaylistTracksLoader, AlbumsLoader, UserLoader, ArtistsLoader,
-        AudioFeaturesLoader, SavedContainsLoader, TracksLoader, CategoriesLoader
+        AudioFeaturesLoader, SavedContainsLoader, TracksLoader, CategoriesLoader, RecommendationsLoader
     } = makeLoaders(token);
 
     const resolvers = {
@@ -34,6 +33,9 @@ export function makeResolvers(token) {
             categories: async (obj, args) => {
                 const res = await CategoriesLoader.load(args)
                 return res.categories
+            },
+            recommendations: async (obj, args) => {
+                return await RecommendationsLoader.load(args.parameters)
             }
         },
         Mutation: {
