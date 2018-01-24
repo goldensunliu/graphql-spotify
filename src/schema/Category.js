@@ -7,6 +7,10 @@ const Category = `
         icons: [Image]
         id: String
         name: String
+        """
+        Get a list of Spotify playlists tagged with a particular category
+        """
+        playlists(country: String, limit: Int, offset: Int): Paging
     }
 `
 

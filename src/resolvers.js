@@ -5,7 +5,8 @@ import {
 export function makeResolvers(token) {
     const {
         PlaylistLoader, PlaylistTracksLoader, AlbumsLoader, UserLoader, ArtistsLoader,
-        AudioFeaturesLoader, SavedContainsLoader, TracksLoader, CategoriesLoader, RecommendationsLoader
+        AudioFeaturesLoader, SavedContainsLoader, TracksLoader, CategoriesLoader, RecommendationsLoader,
+        CategoryPlaylistLoader
     } = makeLoaders(token);
 
     const resolvers = {
@@ -60,14 +61,15 @@ export function makeResolvers(token) {
                     return await PlaylistTracksLoader.load({playlistId, userId, ...args })
                 }
                 // otherwise always fetch all of the tracks
-                let currentOffset = items.length;
+                // when resolving a full playlist there are already items
+                let allItems = items || []
+                let currentOffset = allItems.length
                 let fetches = []
                 while (currentOffset < total ) {
                     fetches.push(PlaylistTracksLoader.load({playlistId, userId, limit, offset: currentOffset }))
                     currentOffset = currentOffset + limit;
                 }
                 const fetchResults = await Promise.all(fetches);
-                let allItems = items
                 fetchResults.forEach((result) => {
                     allItems = allItems.concat(result.items)
                 })
@@ -127,6 +129,12 @@ export function makeResolvers(token) {
             release_date_precision: async (object) => {
                 const { release_date_precision } = await AlbumsLoader.load(object.id)
                 return release_date_precision
+            }
+        },
+        Category: {
+            playlists: async(category, args) => {
+                const { playlists } = await CategoryPlaylistLoader.load({ id: category.id, queryParams: args })
+                return playlists
             }
         },
         Item: {
