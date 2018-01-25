@@ -3,6 +3,7 @@ const RootQuery = `
     featuredPlaylists(limit: Int, offset: Int): Paging
     """
     Returns the most recent 50 tracks played by a user
+    Required Scope: **user-read-recently-played**
     """
     recentlyPlayed: [PlayHistory]
     """
@@ -25,8 +26,10 @@ const RootQuery = `
     https://beta.developer.spotify.com/documentation/web-api/reference/browse/get-list-categories/
     Get a list of categories used to tag items in Spotify (on, for example, the Spotify player’s “Browse” tab).
     """
-    categories(limit: Int, offset: Int): Paging
+    categories(limit: Int, offset: Int, country: String, locale: String): Paging
     """
+    Save one or more tracks to the current user’s ‘Your Music’ library
+    Required Scope: **user-library-modify**
     """
     recommendations(parameters: RecommendationParameters): RecommendationsResponse
     

@@ -1,9 +1,9 @@
-### A [Spotify API](https://beta.developer.spotify.com/documentation/web-api/reference/) GraphQL Schema Implementation Built with [GraphQL.js](https://github.com/graphql/graphql-js)
+## A [Spotify API](https://beta.developer.spotify.com/documentation/web-api/reference/) GraphQL Schema Implementation Built with [GraphQL.js](https://github.com/graphql/graphql-js)
 ![](https://travis-ci.org/goldensunliu/graphql-spotify.svg?branch=master)
 [![npm version](https://badge.fury.io/js/graphql-spotify.svg)](https://badge.fury.io/js/graphql-spotify)
 
 Refer to `src/schema/RootQuery.js` for operations currently supported.
-### Usage
+## Getting started
 ```javascript
 import { makeSchema } from "graphql-spotify"
 let token;
@@ -12,7 +12,7 @@ const schema = makeSchema(token)
 // pass the schema to your favorite server that accepts GraphQL.js Schemas
 ```
 **Make sure the token obtained has the [correct scope](https://beta.developer.spotify.com/documentation/general/guides/scopes/), certain queries and mutations require [different scopes](https://beta.developer.spotify.com/documentation/general/guides/scopes/) from Spotify**
-### Usage with apollo-server-express
+### Getting started with apollo-server-express
 `npm install --save graphql dataloader graphql-tools isomorphic-fetch body-parser apollo-server-express express graphql-spotify`
 
 ##### ES6
@@ -67,4 +67,8 @@ app.listen(port, (err) => {
     console.log(`> Ready on http://localhost:${port}/graphql`)
 })
 ```
+
+## Contribute
+Anyone is welcome! Take a look at [Roadmap.md](./Roadmap.md) for PR ideas and file some issues!
+
 

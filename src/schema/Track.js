@@ -17,6 +17,7 @@ const Track = `
         external_urls: ExternalUrls
         """
         saved in the user's library
+        Required Scope: **user-library-read**
         """
         saved: Boolean
     }
