@@ -6,7 +6,7 @@ export function makeResolvers(token) {
     const {
         PlaylistLoader, PlaylistTracksLoader, AlbumsLoader, UserLoader, ArtistsLoader,
         AudioFeaturesLoader, SavedContainsLoader, TracksLoader, CategoriesLoader, RecommendationsLoader,
-        CategoryPlaylistLoader
+        CategoryPlaylistLoader, CategoryLoader
     } = makeLoaders(token);
 
     const resolvers = {
@@ -34,6 +34,10 @@ export function makeResolvers(token) {
             categories: async (obj, args) => {
                 const res = await CategoriesLoader.load(args)
                 return res.categories
+            },
+            category: async (obj, args) => {
+                const res = await CategoryLoader.load(args.id)
+                return res
             },
             recommendations: async (obj, args) => {
                 return await RecommendationsLoader.load(args.parameters)

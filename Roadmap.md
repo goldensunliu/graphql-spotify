@@ -13,7 +13,7 @@ This document contains a rough outline of a roadmap and a few designs for future
 * Completing schema
 
 ### Next up
-
+* CI tests against real spotify API
 * Better spotify response error handling
 * Option to build schema based on given scopes
 * GraphQL subscriptions for playback related queries

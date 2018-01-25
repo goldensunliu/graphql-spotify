@@ -28,6 +28,11 @@ const RootQuery = `
     """
     categories(limit: Int, offset: Int, country: String, locale: String): Paging
     """
+    Get a single category used to tag items in Spotify (on, for example, the Spotify player’s “Browse” tab)
+    https://beta.developer.spotify.com/documentation/web-api/reference/browse/get-category/
+    """
+    category(id: String!): Category
+    """
     Save one or more tracks to the current user’s ‘Your Music’ library
     Required Scope: **user-library-modify**
     """

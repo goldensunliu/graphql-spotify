@@ -76,6 +76,16 @@ export async function getCategories(token, queryParams = {})
     return res;
 }
 
+export async function getCategory(token, id)
+{
+    let res = await fetch(`https://api.spotify.com/v1/browse/categories/${id}`, {
+        method: 'GET',
+        headers: makeHeaders(token)
+    });
+    res = await res.json();
+    return res;
+}
+
 export async function getRecentlyPlayed(token) {
     const url = "https://api.spotify.com/v1/me/player/recently-played?limit=50"
     let res = await fetch(url, {
@@ -228,6 +238,14 @@ export function makeCategoriesLoader(token) {
     return new Dataloader(batchLoadFn, { batch: false, cacheKeyFn: cacheKeyFnForQueryKeys })
 }
 
+export function makeCategoryLoader(token) {
+    const batchLoadFn = async ([key]) => {
+        const category = await getCategory(token, key)
+        return [category]
+    }
+    return new Dataloader(batchLoadFn, { batch: false })
+}
+
 export function makeCategoriesPlaylistsLoader(token) {
     const batchLoadFn = async ([{ id, queryParams }]) => {
         return [await getCategoryPlaylists(token, id, queryParams)]
@@ -253,6 +271,7 @@ export function makeLoaders(token) {
         AudioFeaturesLoader: makeAudioFeaturesLoader(token),
         CategoriesLoader : makeCategoriesLoader(token),
         RecommendationsLoader: makeRecommendationsLoader(token),
-        CategoryPlaylistLoader: makeCategoriesPlaylistsLoader(token)
+        CategoryPlaylistLoader: makeCategoriesPlaylistsLoader(token),
+        CategoryLoader: makeCategoryLoader(token)
     }
 }
