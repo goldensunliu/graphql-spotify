@@ -20,6 +20,7 @@ const Track = `
         Required Scope: **user-library-read**
         """
         saved: Boolean
+        type: String
     }
 `
 

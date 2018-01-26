@@ -37,7 +37,12 @@ const RootQuery = `
     Required Scope: **user-library-modify**
     """
     recommendations(parameters: RecommendationParameters): RecommendationsResponse
-    
+    """
+    Get the current user’s top artists or tracks based on calculated affinity.
+    (https://beta.developer.spotify.com/documentation/web-api/reference/personalization/get-users-top-artists-and-tracks/)
+    Required Scope: **user-top-read**
+    """
+    top(type: TopType!, limit: Int, offset: Int, time_range: TimeRange): Paging
   }
   type Mutation {
     """

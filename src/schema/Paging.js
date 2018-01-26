@@ -1,5 +1,5 @@
 const Paging = `
-    union Item = Playlist | PlaylistTrack | Category
+    union Item = Playlist | PlaylistTrack | Category | Artist | Track
     type Paging {
         href: String
         items: [Item]

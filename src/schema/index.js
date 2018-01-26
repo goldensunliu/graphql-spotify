@@ -6,6 +6,8 @@ import Track from './Track'
 import Album from './Album'
 import Artist from './Artist'
 import Paging from './Paging'
+import TimeRange from './TimeRange'
+import TopType from './TopType'
 import AudioFeatures from './AudioFeatures'
 import PlayHistory from './PlayHistory'
 import ExternalUrls from './ExternalUrls'
@@ -24,6 +26,7 @@ const SchemaDefinition = `
 `;
 
 const typeDefs = [SchemaDefinition, RootQuery, Playlist, Image, User, PlaylistTrack, Track, Album, Artist, Paging,
-    AudioFeatures, PlayHistory, Category, RecommendationParameters, RecommendationsResponse, RecommendationsSeedObject, ExternalUrls];
+    AudioFeatures, PlayHistory, Category, RecommendationParameters, RecommendationsResponse, RecommendationsSeedObject,
+    ExternalUrls, TimeRange, TopType];
 
 export default typeDefs

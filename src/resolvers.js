@@ -2,11 +2,14 @@ import {
     getFeaturedPlaylists, getRecentlyPlayed, makeLoaders, saveTrackToLib
 } from './SpotifyWebApi'
 
+const MAX_PLAYLIST_TRACKS_FETCH_LIMIT = 100
+const MAX_TOP_TYPE_FETCH_LIMIT = 50
+
 export function makeResolvers(token) {
     const {
         PlaylistLoader, PlaylistTracksLoader, AlbumsLoader, UserLoader, ArtistsLoader,
         AudioFeaturesLoader, SavedContainsLoader, TracksLoader, CategoriesLoader, RecommendationsLoader,
-        CategoryPlaylistLoader, CategoryLoader
+        CategoryPlaylistLoader, CategoryLoader, TopTypeLoader
     } = makeLoaders(token);
 
     const resolvers = {
@@ -41,6 +44,27 @@ export function makeResolvers(token) {
             },
             recommendations: async (obj, args) => {
                 return await RecommendationsLoader.load(args.parameters)
+            },
+            top: async (obj, args) => {
+                const { type, limit, offset, time_range } = args
+                const result = await TopTypeLoader.load({ type, limit, offset, time_range })
+                if (result.items.length >= limit) {
+                    return result
+                }
+                let allItems = result.items
+                const totalFetchSize = Math.min(limit, result.total)
+                let currentOffset = allItems.length
+                let fetches = []
+                while (currentOffset < totalFetchSize) {
+                    const fetchSize = Math.min(MAX_TOP_TYPE_FETCH_LIMIT, totalFetchSize - currentOffset);
+                    fetches.push(TopTypeLoader.load({type, time_range, limit: fetchSize, offset: currentOffset }))
+                    currentOffset = currentOffset + fetchSize;
+                }
+                const fetchResults = await Promise.all(fetches);
+                fetchResults.forEach((result) => {
+                    allItems = allItems.concat(result.items)
+                })
+                return { total: result.total, items: allItems, limit: allItems.length, offset }
             }
         },
         Mutation: {
@@ -59,19 +83,20 @@ export function makeResolvers(token) {
                 return total
             },
             tracks: async (obj, args) => {
-                const { id: playlistId , owner: { id: userId }, tracks: { total, offset, items, limit }} = obj
+                const { id: playlistId , owner: { id: userId }, tracks: { total, offset, items }} = obj
                 // fetch with limit and offset when specified
                 if (args.limit && args.offset) {
                     return await PlaylistTracksLoader.load({playlistId, userId, ...args })
                 }
                 // otherwise always fetch all of the tracks
-                // when resolving a full playlist there are already items
+                // when resolving a full playlist, tracks are set the first 100 tracks
                 let allItems = items || []
                 let currentOffset = allItems.length
                 let fetches = []
                 while (currentOffset < total ) {
-                    fetches.push(PlaylistTracksLoader.load({playlistId, userId, limit, offset: currentOffset }))
-                    currentOffset = currentOffset + limit;
+                    const fetchSize = Math.min(MAX_PLAYLIST_TRACKS_FETCH_LIMIT, total - currentOffset);
+                    fetches.push(PlaylistTracksLoader.load({playlistId, userId, limit: fetchSize, offset: currentOffset }))
+                    currentOffset = currentOffset + fetchSize;
                 }
                 const fetchResults = await Promise.all(fetches);
                 fetchResults.forEach((result) => {
@@ -82,7 +107,7 @@ export function makeResolvers(token) {
         },
         Track: {
             audio_features: async ({ id }) => {
-                return await AudioFeatureLoader.load(id)
+                return await AudioFeaturesLoader.load(id)
             },
             saved: async ({id}) => {
                 return await SavedContainsLoader.load(id)
@@ -146,6 +171,12 @@ export function makeResolvers(token) {
                 const { type } = object
                 if (type === 'user') {
                     return 'User'
+                }
+                if (type === 'artist') {
+                    return 'Artist'
+                }
+                if (type === 'track') {
+                    return 'Track'
                 }
                 if (type === 'playlist') {
                     return 'Playlist'
