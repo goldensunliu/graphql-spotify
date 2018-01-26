@@ -2,7 +2,7 @@
 ![](https://travis-ci.org/goldensunliu/graphql-spotify.svg?branch=master)
 [![npm version](https://badge.fury.io/js/graphql-spotify.svg)](https://badge.fury.io/js/graphql-spotify)
 
-Refer to `src/schema/RootQuery.js` for operations currently supported.
+Refer to [src/schema/RootQuery.js](src/schema/RootQuery.js) for operations currently supported.
 ## Getting started
 ```javascript
 import { makeSchema } from "graphql-spotify"
@@ -69,6 +69,6 @@ app.listen(port, (err) => {
 ```
 
 ## Contribute
-Anyone is welcome! Take a look at [Roadmap.md](./Roadmap.md) for PR ideas and file some issues!
+Anyone is welcome! Take a look at [Roadmap.md](Roadmap.md) for PR ideas and file some issues!
 
 
