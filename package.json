@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack"
   },
-  "author": "Sitian Liu",
+  "author": "Sitian Liu <goldensunliu@gmail.com> (https://www.sitianliu.com/)",
   "license": "MIT",
   "devDependencies": {
     "babel": "^6.23.0",
