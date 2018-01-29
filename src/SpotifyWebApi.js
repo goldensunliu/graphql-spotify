@@ -126,9 +126,29 @@ export async function getUser(token, userId)
     return res;
 }
 
+export async function getMe(token)
+{
+    let res = await fetch(`https://api.spotify.com/v1/me`, {
+        method: 'GET',
+        headers: makeHeaders(token)
+    });
+    res = await res.json();
+    return res;
+}
+
 export async function getPlaylistTracks(token, { userId, playlistId, limit = 100, offset = 0 })
 {
     let res = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks?${serializeToURLParameters({limit, offset})}`, {
+        method: 'GET',
+        headers: makeHeaders(token)
+    });
+    res = await res.json();
+    return res;
+}
+
+export async function getPlaylistFollowersContains(token, { playlistUserId, playlistId, userIds })
+{
+    let res = await fetch(`https://api.spotify.com/v1/users/${playlistUserId}/playlists/${playlistId}/followers/contains?ids=${userIds.toString()}`, {
         method: 'GET',
         headers: makeHeaders(token)
     });
@@ -277,6 +297,27 @@ export function makeGetTopTypeLoader(token) {
     return new Dataloader(batchLoadFn, { batch: false, cacheKeyFn: cacheKeyFnForQueryKeys })
 }
 
+export function makePlaylistFollowersContainsLoader(token) {
+    const batchLoadFn = async ([key]) => {
+        return [await getPlaylistFollowersContains(token, key)]
+    }
+    return new Dataloader(batchLoadFn, { batch: false, cacheKeyFn: cacheKeyFnForQueryKeys })
+}
+
+// Skipping the dataloader just here since the loader is meant to called with only .load()
+// Use it the same way as you would with a dataloader, i.e only on per request basis
+export function makeMeLoader(token) {
+    let cacheMe = null;
+    return {
+        load : async () => {
+            if (!cacheMe) {
+                cacheMe = await getMe(token)
+            }
+            return cacheMe
+        }
+    }
+}
+
 export function makeLoaders(token) {
     return {
         UserLoader : makeUserLoader(token),
@@ -291,6 +332,8 @@ export function makeLoaders(token) {
         RecommendationsLoader: makeRecommendationsLoader(token),
         CategoryPlaylistLoader: makeCategoriesPlaylistsLoader(token),
         CategoryLoader: makeCategoryLoader(token),
-        TopTypeLoader: makeGetTopTypeLoader(token)
+        TopTypeLoader: makeGetTopTypeLoader(token),
+        PlaylistFollowersContainsLoader: makePlaylistFollowersContainsLoader(token),
+        MeLoader: makeMeLoader(token)
     }
 }

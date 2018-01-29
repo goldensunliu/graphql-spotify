@@ -4,12 +4,70 @@ import {
 
 const MAX_PLAYLIST_TRACKS_FETCH_LIMIT = 100
 const MAX_TOP_TYPE_FETCH_LIMIT = 50
+const MAX_PLAYLIST_FOLLOWERS_CONTAINS_LIMIT = 5;
+
+const makePlaylistResolver = ({ PlaylistLoader, PlaylistTracksLoader, PlaylistFollowersContainsLoader, MeLoader }) => {
+    return {
+        description: async (object) => {
+            const {id: playlistId , owner: { id: userId }} = object
+            const playlistFull = await PlaylistLoader.load({ playlistId, userId })
+            return playlistFull.description
+        },
+        totalTracks: async ({ tracks: { total }}) => {
+            return total
+        },
+        tracks: async (obj, args) => {
+            const { id: playlistId , owner: { id: userId }, tracks: { total, offset, items }} = obj
+            // fetch with limit and offset when specified
+            if (args.limit && args.offset) {
+                return await PlaylistTracksLoader.load({playlistId, userId, ...args })
+            }
+            // otherwise always fetch all of the tracks
+            // when resolving a full playlist, tracks are set the first 100 tracks
+            let allItems = items || []
+            let currentOffset = allItems.length
+            let fetches = []
+            while (currentOffset < total ) {
+                const fetchSize = Math.min(MAX_PLAYLIST_TRACKS_FETCH_LIMIT, total - currentOffset);
+                fetches.push(PlaylistTracksLoader.load({playlistId, userId, limit: fetchSize, offset: currentOffset }))
+                currentOffset = currentOffset + fetchSize;
+            }
+            const fetchResults = await Promise.all(fetches);
+            fetchResults.forEach((result) => {
+                allItems = allItems.concat(result.items)
+            })
+            return { total, items: allItems, limit: total, offset }
+        },
+        followersContains: async (obj, { userIds }) => {
+            const { id: playlistId , owner: { id: playlistUserId } } = obj
+            let currentOffset = 0
+            let fetches = []
+            let total = userIds.length
+            while (currentOffset < total ) {
+                const fetchSize = Math.min(MAX_PLAYLIST_FOLLOWERS_CONTAINS_LIMIT, total - currentOffset);
+                fetches.push(PlaylistFollowersContainsLoader.load({ playlistUserId, playlistId,
+                    userIds: userIds.slice(currentOffset, currentOffset + fetchSize)
+                }))
+                currentOffset = currentOffset + fetchSize;
+            }
+            const fetchResults = await Promise.all(fetches);
+            return fetchResults.reduce((accu, value) => { return accu.concat(value) }, [])
+        },
+        following: async (obj) => {
+            const { id: playlistId , owner: { id: playlistUserId } } = obj
+            const me = await MeLoader.load()
+            const userIds = [me.id]
+            const [following] = await PlaylistFollowersContainsLoader.load({ playlistUserId, playlistId, userIds })
+            return following
+        },
+    }
+}
 
 export function makeResolvers(token) {
     const {
         PlaylistLoader, PlaylistTracksLoader, AlbumsLoader, UserLoader, ArtistsLoader,
         AudioFeaturesLoader, SavedContainsLoader, TracksLoader, CategoriesLoader, RecommendationsLoader,
-        CategoryPlaylistLoader, CategoryLoader, TopTypeLoader
+        CategoryPlaylistLoader, CategoryLoader, TopTypeLoader, PlaylistFollowersContainsLoader, MeLoader
     } = makeLoaders(token);
 
     const resolvers = {
@@ -73,38 +131,7 @@ export function makeResolvers(token) {
                 return { id: trackId, saved: true }
             }
         },
-        Playlist: {
-            description: async (object) => {
-                const {id: playlistId , owner: { id: userId }} = object
-                const playlistFull = await PlaylistLoader.load({ playlistId, userId })
-                return playlistFull.description
-            },
-            totalTracks: async ({ tracks: { total }}) => {
-                return total
-            },
-            tracks: async (obj, args) => {
-                const { id: playlistId , owner: { id: userId }, tracks: { total, offset, items }} = obj
-                // fetch with limit and offset when specified
-                if (args.limit && args.offset) {
-                    return await PlaylistTracksLoader.load({playlistId, userId, ...args })
-                }
-                // otherwise always fetch all of the tracks
-                // when resolving a full playlist, tracks are set the first 100 tracks
-                let allItems = items || []
-                let currentOffset = allItems.length
-                let fetches = []
-                while (currentOffset < total ) {
-                    const fetchSize = Math.min(MAX_PLAYLIST_TRACKS_FETCH_LIMIT, total - currentOffset);
-                    fetches.push(PlaylistTracksLoader.load({playlistId, userId, limit: fetchSize, offset: currentOffset }))
-                    currentOffset = currentOffset + fetchSize;
-                }
-                const fetchResults = await Promise.all(fetches);
-                fetchResults.forEach((result) => {
-                    allItems = allItems.concat(result.items)
-                })
-                return { total, items: allItems, limit: total, offset }
-            }
-        },
+        Playlist: makePlaylistResolver({ PlaylistLoader, PlaylistTracksLoader, PlaylistFollowersContainsLoader, MeLoader }),
         Track: {
             audio_features: async ({ id }) => {
                 return await AudioFeaturesLoader.load(id)

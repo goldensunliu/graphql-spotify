@@ -45,6 +45,15 @@ const Playlist = `
     The Spotify URI for this user.
     """
     uri: String
+    """
+    Check to see if one or more Spotify users are following the playlist.
+    """
+    followersContains(userIds: [String]!): [Boolean]
+    """
+    Check to see the user is following the playlist.
+    **Required Scope**: playlist-read-private
+    """
+    following: Boolean
   }
 `
 
