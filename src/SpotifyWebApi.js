@@ -43,6 +43,14 @@ export async function followPlaylist(token, { ownerId, playlistId, isPublic = tr
     })
 }
 
+export async function unfollowPlaylist(token, { ownerId, playlistId }) {
+    const url = `https://api.spotify.com/v1/users/${ownerId}/playlists/${playlistId}/followers`
+    return await fetch(url, {
+        method: 'DELETE',
+        headers: makeHeaders(token)
+    })
+}
+
 export async function getSavedContains(token, trackIds) {
     const url = `https://api.spotify.com/v1/me/tracks/contains?ids=${trackIds.toString()}`
     let res = await fetch(url, {

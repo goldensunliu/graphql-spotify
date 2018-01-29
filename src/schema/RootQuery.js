@@ -60,6 +60,18 @@ const RootQuery = `
     ***returned Track only contains { id, saved }, won't resolve other fields***
     """
     removeTracks(trackIds: [String]!): [Track]
+    """
+    follow a playlist
+    ***returned Playlist only contains { id, following }, won't resolve other fields***
+    assuming id is unique ATM so client with defaultDataIdFromObject will update its cache automatically 
+    """
+    followPlaylist(ownerId: String!, playlistId: String!, isPublic: Boolean = true): Playlist
+    """
+    unfollow a playlist
+    ***returned Playlist only contains { id, following }, won't resolve other fields***
+    assuming id is unique ATM so client with defaultDataIdFromObject will update its cache automatically 
+    """
+    unfollowPlaylist(ownerId: String!, playlistId: String!): Playlist
   }
 `;
 

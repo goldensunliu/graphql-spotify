@@ -1,5 +1,6 @@
 import {
-    getFeaturedPlaylists, getRecentlyPlayed, makeLoaders, saveTracksToLib, followPlaylist, removeTracksFromLib
+    getFeaturedPlaylists, getRecentlyPlayed, makeLoaders, saveTracksToLib, followPlaylist, unfollowPlaylist,
+    removeTracksFromLib
 } from './SpotifyWebApi'
 
 const MAX_PLAYLIST_TRACKS_FETCH_LIMIT = 100
@@ -15,6 +16,9 @@ const makePlaylistResolver = ({ PlaylistLoader, PlaylistTracksLoader, PlaylistFo
         },
         totalTracks: async ({ tracks: { total }}) => {
             return total
+        },
+        followerCount: (obj) => {
+            return obj.followers.total
         },
         tracks: async (obj, args) => {
             const { id: playlistId , owner: { id: userId }, tracks: { total, offset, items }} = obj
@@ -54,6 +58,7 @@ const makePlaylistResolver = ({ PlaylistLoader, PlaylistTracksLoader, PlaylistFo
             return fetchResults.reduce((accu, value) => { return accu.concat(value) }, [])
         },
         following: async (obj) => {
+            if (obj.following || obj.following === false) return obj.following
             const { id: playlistId , owner: { id: playlistUserId } } = obj
             const me = await MeLoader.load()
             const userIds = [me.id]
@@ -140,6 +145,16 @@ export function makeResolvers(token) {
                 const res = await removeTracksFromLib(token, trackIds)
                 if (res.status !== 200) return;
                 return trackIds.map(id => ({ id, saved: false }))
+            },
+            followPlaylist: async (obj, { ownerId, playlistId, isPublic }) => {
+                const res = await followPlaylist(token, { ownerId, playlistId, isPublic })
+                if (res.status !== 200) return;
+                return { id: playlistId, following: true }
+            },
+            unfollowPlaylist: async (obj, { ownerId, playlistId }) => {
+                const res = await unfollowPlaylist(token, { ownerId, playlistId })
+                if (res.status !== 200) return;
+                return { id: playlistId, following: false }
             }
         },
         Playlist: makePlaylistResolver({ PlaylistLoader, PlaylistTracksLoader, PlaylistFollowersContainsLoader, MeLoader }),
