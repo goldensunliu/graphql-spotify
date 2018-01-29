@@ -18,11 +18,28 @@ function serializeToURLParameters(obj) {
 }
 
 
-export async function saveTrackToLib(token, trackIds) {
+export async function saveTracksToLib(token, trackIds) {
     const url = `https://api.spotify.com/v1/me/tracks?ids=${trackIds.toString()}`
     return await fetch(url, {
         method: 'PUT',
         headers: makeHeaders(token)
+    })
+}
+
+export async function removeTracksFromLib(token, trackIds) {
+    const url = `https://api.spotify.com/v1/me/tracks?ids=${trackIds.toString()}`
+    return await fetch(url, {
+        method: 'DELETE',
+        headers: makeHeaders(token)
+    })
+}
+
+export async function followPlaylist(token, { ownerId, playlistId, isPublic = true }) {
+    const url = `https://api.spotify.com/v1/users/${ownerId}/playlists/${playlistId}/followers`
+    return await fetch(url, {
+        method: 'PUT',
+        headers: makeHeaders(token),
+        body: JSON.stringify({ public: isPublic })
     })
 }
 

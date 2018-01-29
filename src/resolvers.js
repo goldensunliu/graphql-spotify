@@ -1,5 +1,5 @@
 import {
-    getFeaturedPlaylists, getRecentlyPlayed, makeLoaders, saveTrackToLib
+    getFeaturedPlaylists, getRecentlyPlayed, makeLoaders, saveTracksToLib, followPlaylist, removeTracksFromLib
 } from './SpotifyWebApi'
 
 const MAX_PLAYLIST_TRACKS_FETCH_LIMIT = 100
@@ -127,8 +127,19 @@ export function makeResolvers(token) {
         },
         Mutation: {
             saveTrack: async (obj, {trackId}) => {
-                await saveTrackToLib(token, [trackId])
+                const res = await saveTracksToLib(token, [trackId])
+                if (res.status !== 200) return;
                 return { id: trackId, saved: true }
+            },
+            saveTracks: async (obj, {trackIds}) => {
+                const res = await saveTracksToLib(token, trackIds)
+                if (res.status !== 200) return;
+                return trackIds.map(id => ({ id, saved: true }))
+            },
+            removeTracks: async (obj, {trackIds}) => {
+                const res = await removeTracksFromLib(token, trackIds)
+                if (res.status !== 200) return;
+                return trackIds.map(id => ({ id, saved: false }))
             }
         },
         Playlist: makePlaylistResolver({ PlaylistLoader, PlaylistTracksLoader, PlaylistFollowersContainsLoader, MeLoader }),

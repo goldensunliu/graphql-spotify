@@ -46,8 +46,20 @@ const RootQuery = `
   }
   type Mutation {
     """
+    save a track
+    ***returned Track only contains { id, saved }, won't resolve other fields***
     """
     saveTrack(trackId: String!): Track
+    """
+    save several tracks. Max 50
+    ***returned Track only contains { id, saved }, won't resolve other fields***
+    """
+    saveTracks(trackIds: [String]!): [Track]
+    """
+    remove several tracks. Max 50
+    ***returned Track only contains { id, saved }, won't resolve other fields***
+    """
+    removeTracks(trackIds: [String]!): [Track]
   }
 `;
 

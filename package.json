@@ -1,6 +1,6 @@
 {
   "name": "graphql-spotify",
-  "version": "0.41",
+  "version": "0.42.0",
   "description": "GraphQL Schema And Resolvers For Spotify Web API",
   "main": "dist/lib.js",
   "module": "src/index.js",
