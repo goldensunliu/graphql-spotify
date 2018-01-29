@@ -1,8 +1,10 @@
-## A [Spotify API](https://beta.developer.spotify.com/documentation/web-api/reference/) GraphQL Schema Implementation Built with [GraphQL.js](https://github.com/graphql/graphql-js)
+## GraphQL Spotify: A [Spotify API](https://beta.developer.spotify.com/documentation/web-api/reference/) GraphQL Schema Implementation Built with [GraphQL.js](https://github.com/graphql/graphql-js)
 ![](https://travis-ci.org/goldensunliu/graphql-spotify.svg?branch=master)
 [![npm version](https://badge.fury.io/js/graphql-spotify.svg)](https://badge.fury.io/js/graphql-spotify)
 
 Refer to [src/schema/RootQuery.js](src/schema/RootQuery.js) for operations currently supported.
+
+****[Deployed Example App Powered By GraphQL Spotify](https://graph-spotify-example-gzsqbkpmqv.now.sh)**** And Its [Source Code](https://github.com/goldensunliu/graphql-spotify-example)
 ## Getting started
 ```javascript
 import { makeSchema } from "graphql-spotify"
