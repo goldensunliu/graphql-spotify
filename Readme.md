@@ -71,4 +71,6 @@ app.listen(port, (err) => {
 ## Contribute
 Anyone is welcome! Take a look at [Roadmap.md](Roadmap.md) for PR ideas and file some issues!
 
-
+## Used By
+* [Graphql Spotify Example](https://github.com/goldensunliu/graphql-spotify-example)
+* [Spotify Insight App](https://noise.sitianliu.com/login)
