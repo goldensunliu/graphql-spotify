@@ -173,19 +173,23 @@ export function makeResolvers(token) {
             }
         },
         Artist: {
-            followerCount: async ({ id }) => {
+            followerCount: async ({ id, followers }) => {
+                if (followers) return followers.total
                 const artistFull = await ArtistsLoader.load(id)
                 return artistFull.followers.total
             },
-            images: async ({ id }) => {
+            images: async ({ id, images }) => {
+                if (images) return images
                 const artistFull = await ArtistsLoader.load(id)
                 return artistFull.images
             },
-            popularity: async ({ id }) => {
+            popularity: async ({ id, popularity }) => {
+                if (popularity) return popularity;
                 const artistFull = await ArtistsLoader.load(id)
                 return artistFull.popularity
             },
-            genres: async ({ id }) => {
+            genres: async ({ id, genres }) => {
+                if (genres) return genres;
                 const artistFull = await ArtistsLoader.load(id)
                 return artistFull.genres
             },
