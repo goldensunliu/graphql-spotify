@@ -14,7 +14,9 @@ function cacheKeyFnForQueryKeys(key) {
 }
 
 function serializeToURLParameters(obj) {
-    return Object.entries(obj).map(([key, val]) => val && `${key}=${val}`).join('&')
+    return Object.entries(obj).map(([key, val]) => val && `${key}=${val}`)
+        .filter((i)=> i)
+        .join('&')
 }
 
 
