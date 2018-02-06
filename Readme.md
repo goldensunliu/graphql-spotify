@@ -100,5 +100,5 @@ Anyone is welcome! Take a look at [Roadmap.md](Roadmap.md) for PR ideas and file
 * [Graphql Spotify Example](https://github.com/goldensunliu/graphql-spotify-example)
 * [Spotify Insight App](https://noise.sitianliu.com/login)
 
-### Created By
-[Sitian Liu]((https://www.sitianliu.com/))
+## Created By
+[Sitian Liu](https://www.sitianliu.com/)
