@@ -4,7 +4,30 @@
 
 Refer to [src/schema/RootQuery.js](src/schema/RootQuery.js) for operations currently supported.
 
-****[Deployed Example App Powered By GraphQL Spotify](https://graph-spotify-example-gzsqbkpmqv.now.sh)**** And Its [Source Code](https://github.com/goldensunliu/graphql-spotify-example)
+---
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Blog on Why](#blog-on-why)
+- [Demo](#demo)
+- [Getting started](#getting-started)
+  - [Getting started with apollo-server-express](#getting-started-with-apollo-server-express)
+      - [ES6](#es6)
+      - [ES5](#es5)
+- [Contribute](#contribute)
+- [Used By](#used-by)
+  - [Created By](#created-by)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## Blog on Why
+
+[Check out the blog](https://medium.com/@sitianliu_57680/why-i-built-a-graphql-server-for-spotify-api-4f516836e4ec) on why graphql-spotify was built.
+## Demo
+
+****[Deployed Example App Powered By GraphQL Spotify](https://graphql-spotify-example-zzajohosbz.now.sh)**** And Its [Source Code Repo](https://github.com/goldensunliu/graphql-spotify-example)
+
 ## Getting started
 ```javascript
 import { makeSchema } from "graphql-spotify"
