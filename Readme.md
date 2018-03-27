@@ -1,4 +1,6 @@
 ## GraphQL Spotify: [Spotify API](https://beta.developer.spotify.com/documentation/web-api/reference/) GraphQL Schema and Resolvers Built with [GraphQL.js](https://github.com/graphql/graphql-js)
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/goldensunliu/graphql-spotify.svg)](https://greenkeeper.io/)
 ![](https://travis-ci.org/goldensunliu/graphql-spotify.svg?branch=master)
 [![npm version](https://badge.fury.io/js/graphql-spotify.svg)](https://badge.fury.io/js/graphql-spotify)
 
