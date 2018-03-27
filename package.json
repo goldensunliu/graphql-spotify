@@ -18,7 +18,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "path": "^0.12.7",
-    "webpack": "^3.10.0",
+    "webpack": "^4.2.0",
     "webpack-node-externals": "^1.6.0",
     "graphql": "git://github.com/graphql/graphql-js.git#npm"
   },
