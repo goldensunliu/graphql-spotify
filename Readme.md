@@ -43,7 +43,7 @@ const schema = makeSchema(token)
 ##### ES6
 ```javascript
 import { makeSchema } from "graphql-spotify";
-import { graphqlExpress } from 'apollo-server-express';
+import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import express from 'express';
 import bodyParser from 'body-parser'
 // Initialize the app
@@ -70,6 +70,7 @@ app.listen(port, (err) => {
 ```javascript
 const makeSchema = require("graphql-spotify").makeSchema;
 const graphqlExpress = require('apollo-server-express').graphqlExpress;
+const graphiqlExpress = require('apollo-server-express').graphiqlExpress;
 const express = require('express');
 const bodyParser = require('body-parser')
 // Initialize the app
